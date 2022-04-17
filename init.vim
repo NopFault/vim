@@ -1,15 +1,17 @@
 " All Plugins
-call plug#begin()
-
+call plug#begin('~/.vim/plugged')
 
     Plug 'vim-airline/vim-airline'
     Plug 'honza/vim-snippets'
     Plug 'vim-airline/vim-airline-themes'
-    Plug 'Chiel92/vim-autoformat'
     Plug 'scrooloose/nerdtree'
     Plug 'terryma/vim-multiple-cursors'
 
     Plug 'sainnhe/gruvbox-material'
+
+    " :CocInstall coc-tabnine
+    Plug 'neoclide/coc.nvim'
+    Plug 'metakirby5/codi.vim'
 
 call plug#end()
 
@@ -130,3 +132,12 @@ inoremap <C-j> <Esc>:m .+1<CR>==gi
 inoremap <C-k> <Esc>:m .-2<CR>==gi
 vnoremap <C-j> :m '>+1<CR>gv=gv
 vnoremap <C-k> :m '<-2<CR>gv=gv
+
+" since it is fullscreen, I'd like a 50/50 split
+let g:codi#width = winwidth(winnr()) / 2
+let g:codi#interpreters = {
+   \ 'python': {
+       \ 'bin': 'python3',
+       \ 'prompt': '^\(>>>\|\.\.\.\) ',
+       \ },
+   \ }
