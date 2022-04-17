@@ -1,9 +1,9 @@
 " All Plugins
 call plug#begin()
 
-    Plug 'honza/vim-snippets'
 
     Plug 'vim-airline/vim-airline'
+    Plug 'honza/vim-snippets'
     Plug 'vim-airline/vim-airline-themes'
     Plug 'Chiel92/vim-autoformat'
     Plug 'scrooloose/nerdtree'
@@ -123,3 +123,10 @@ nmap <leader>l :bnext<CR>
 nmap <leader>p :bprevious<CR>
 nmap <leader>bq :bp <BAR> bd #<CR>
 
+" Moving lines 
+nnoremap <C-j> :m .+1<CR>==
+nnoremap <C-k> :m .-2<CR>==
+inoremap <C-j> <Esc>:m .+1<CR>==gi
+inoremap <C-k> <Esc>:m .-2<CR>==gi
+vnoremap <C-j> :m '>+1<CR>gv=gv
+vnoremap <C-k> :m '<-2<CR>gv=gv
