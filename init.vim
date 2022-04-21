@@ -7,7 +7,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'scrooloose/nerdtree'
     Plug 'terryma/vim-multiple-cursors'
 
-    Plug 'sainnhe/gruvbox-material'
+    Plug 'folke/tokyonight.nvim'
 
     " :CocInstall coc-tabnine
     Plug 'neoclide/coc.nvim'
@@ -20,15 +20,16 @@ call plug#end()
 set t_Co=256
 syntax on
 
-" THEME:
-" For better performance
-"
-let g:gruvbox_material_better_performance = 1
-colorscheme gruvbox-material
-set background=dark
-if has('termguicolors')
-    set termguicolors
-endif
+let g:tokyonight_style = "night"
+let g:tokyonight_italic_functions = 1
+let g:tokyonight_sidebars = [ "qf", "vista_kind", "terminal", "packer" ]
+
+let g:tokyonight_colors = {
+  \ 'hint': 'orange',
+  \ 'error': '#ff0000'
+\ }
+
+colorscheme tokyonight
 
 set cursorline
 set ruler               " Show the line and column numbers of the cursor.
@@ -121,8 +122,11 @@ let g:multi_cursor_quit_key='<Esc>'
 let g:multi_cursor_quit_key='<Esc>'
 
 " Buffer handling
+" Ctrl-w o -> makes new split buffer into whole window
+"
 nmap <leader>l :bnext<CR>
 nmap <leader>p :bprevious<CR>
+nmap <leader>bn :new<CR>
 nmap <leader>bq :bp <BAR> bd #<CR>
 
 " Moving lines 
