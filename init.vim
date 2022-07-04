@@ -22,6 +22,7 @@ Plug 'nvim-telescope/telescope.nvim'
 
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/gv.vim'
 
 call plug#end()
 
@@ -181,6 +182,7 @@ autocmd BufEnter * lua require'completion'.on_attach()
 
 " GitGutter
 "
+
 let g:gitgutter_enabled = 1
 
 if executable('git')
@@ -196,6 +198,4 @@ function! GitStatus()
   return printf('+%d ~%d -%d', a, m, r)
 endfunction
 set statusline+=%{GitStatus()}
-
-
 
