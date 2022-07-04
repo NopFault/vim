@@ -1,23 +1,3 @@
-" :CocConfig
-" {
-"  "coc.preferences.formatOnSaveFiletypes": ["py", "yaml", "json"],
-"  "python.linting.flake8Enabled": true,
-"  "python.formatting.provider": "black"
-" }
-"
-" python3 -m pip install black flake8
-"
-" :CocInstall
-" coc-spell-checker: The general spell checker for neovim
-" coc-prettier: A very popular code formatter
-" coc-git: A git plugin to show which line is added/deleted and not committed
-" coc-pyright: The main Python plugin I use
-" coc-json: JSON file formatting plugin
-" coc-docker: Dockerfile and docker-compose formatters
-" coc-yaml: Yaml plugin for Kubernetes and terraform files
-" coc-tabnine
-"
-"
 " All Plugins
 call plug#begin('~/.vim/plugged')
 
@@ -31,9 +11,17 @@ Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'folke/tokyonight.nvim'
 Plug 'jiangmiao/auto-pairs'
 
-Plug 'neoclide/coc.nvim'
 Plug 'metakirby5/codi.vim'
 Plug 'prettier/vim-prettier'
+Plug 'stephpy/vim-php-cs-fixer'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 call plug#end()
 
@@ -103,8 +91,8 @@ set nu rnu
 nmap L :set nu! rnu!<CR>
 
 
-let mapleader=','
-let maplocalleader=','
+let mapleader=' '
+let maplocalleader=' '
 
 " Search and Replace
 nmap <Leader>s :%s//g<Left><Left>
@@ -123,7 +111,7 @@ let g:session_autoload = 'yes'
 let g:session_default_to_last = 1
 
 " nerdtree config
-map <leader>n :NERDTreeToggle<CR>
+map <leader>e :NERDTreeToggle<CR>
 
 
 " airline settings
@@ -151,9 +139,9 @@ let g:multi_cursor_quit_key='<Esc>'
 " Ctrl-w o -> makes new split buffer into whole window
 "
 nmap <leader>l :bnext<CR>
-nmap <leader>p :bprevious<CR>
-nmap <leader>bn :new<CR>
-nmap <leader>bq :bp <BAR> bd #<CR>
+nmap <leader>h :bprevious<CR>
+nmap <leader>bn :new<CR>:q<CR>
+nmap <leader>bq :bd<CR>
 
 " Moving lines 
 nnoremap <C-j> :m .+1<CR>==
@@ -165,22 +153,12 @@ vnoremap <C-k> :m '<-2<CR>gv=gv
 
 let NERDTreeShowHidden=1
 
-" Code action on <leader>a
-vmap <leader>a <Plug>(coc-codeaction-selected)<CR>
-nmap <leader>a <Plug>(coc-codeaction-selected)<CR>
-
-" Format action on <leader>f
-vmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-" Goto definition
-nmap <silent> gd <Plug>(coc-definition)
-" Open definition in a split window
-nmap <silent> gv :vsp<CR><Plug>(coc-definition)<C-W>L
-
 let g:prettier#exec_cmd_path = "/opt/homebrew/bin/prettier"
 let g:prettier#quickfix_enabled = 0
 
-autocmd TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.svelte,*.yaml,*.html PrettierAsync
+autocmd BufWrite *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.svelte,*.yaml,*.html PrettierAsync
+
+autocmd BufWrite *.php call PhpCsFixerFixFile()
 
 
 " since it is fullscreen, I'd like a 50/50 split
@@ -191,5 +169,33 @@ let g:codi#interpreters = {
                 \ 'prompt': '^\(>>>\|\.\.\.\) ',
                 \ },
                 \ }
+
+ " Telescope FzF keys
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+" Use completion-nvim in every buffer
+autocmd BufEnter * lua require'completion'.on_attach()
+
+" GitGutter
+"
+let g:gitgutter_enabled = 1
+
+if executable('git')
+   let g:gitgutter_highlight_lines = 1  " Turn on gitgutter highlighting
+else
+    let g:gitgutter_git_executable = '/bin/true'
+    let g:gitgutter_enabled = 0
+endif
+
+
+function! GitStatus()
+  let [a,m,r] = GitGutterGetHunkSummary()
+  return printf('+%d ~%d -%d', a, m, r)
+endfunction
+set statusline+=%{GitStatus()}
+
 
 
