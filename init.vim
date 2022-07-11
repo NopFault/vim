@@ -24,6 +24,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/gv.vim'
 
+Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
+
 call plug#end()
 
 " Basic Settings 
@@ -157,10 +159,13 @@ let NERDTreeShowHidden=1
 let g:prettier#exec_cmd_path = "/opt/homebrew/bin/prettier"
 let g:prettier#quickfix_enabled = 0
 
-autocmd BufWrite *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.svelte,*.yaml,*.html PrettierAsync
+autocmd BufWrite *.vue,*.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.svelte,*.yaml,*.html PrettierAsync
 
-autocmd BufWrite *.php call PhpCsFixerFixFile()
+let g:php_cs_fixer_cache = "/Users/nopfault/git/teensyUrl/.php-cs-fixer.cache"
+let g:php_cs_fixer_config_file = "/Users/nopfault/git/teensUrl/.php-cs-fixer.php"
 
+let g:php_cs_fixer_rules = "@PSR2"
+autocmd BufWritePost *.php silent! call PhpCsFixerFixFile()
 
 " since it is fullscreen, I'd like a 50/50 split
 let g:codi#width = winwidth(winnr()) / 2
@@ -177,6 +182,15 @@ nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
+lua << EOF
+require('telescope').setup{
+    defaults = {
+        file_ignore_patterns = {".git", "node_modules", "vendor" },
+    }
+}
+EOF
+
+
 " Use completion-nvim in every buffer
 autocmd BufEnter * lua require'completion'.on_attach()
 
@@ -186,7 +200,7 @@ autocmd BufEnter * lua require'completion'.on_attach()
 let g:gitgutter_enabled = 1
 
 if executable('git')
-   let g:gitgutter_highlight_lines = 1  " Turn on gitgutter highlighting
+    "let g:gitgutter_highlight_lines = 1  " Turn on gitgutter highlighting
 else
     let g:gitgutter_git_executable = '/bin/true'
     let g:gitgutter_enabled = 0
@@ -199,3 +213,10 @@ function! GitStatus()
 endfunction
 set statusline+=%{GitStatus()}
 
+
+augroup import_cost_auto_run
+  autocmd!
+  autocmd InsertLeave *.js,*.jsx,*.ts,*.tsx ImportCost
+  autocmd BufEnter *.js,*.jsx,*.ts,*.tsx ImportCost
+  autocmd CursorHold *.js,*.jsx,*.ts,*.tsx ImportCost
+augroup END
