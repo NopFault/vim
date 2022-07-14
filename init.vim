@@ -141,8 +141,8 @@ let g:multi_cursor_quit_key='<Esc>'
 " Buffer handling
 " Ctrl-w o -> makes new split buffer into whole window
 "
-nmap <leader>l :bnext<CR>
-nmap <leader>h :bprevious<CR>
+nmap L :bnext<CR>
+nmap H :bprevious<CR>
 nmap <leader>bn :new<CR>:q<CR>
 nmap <leader>bq :bd<CR>
 
