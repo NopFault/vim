@@ -13,9 +13,11 @@ Plug 'jiangmiao/auto-pairs'
 
 Plug 'metakirby5/codi.vim'
 Plug 'prettier/vim-prettier'
+Plug 'jwalton512/vim-blade'
 Plug 'stephpy/vim-php-cs-fixer'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+Plug 'yaegassy/coc-blade-formatter', {'do': 'yarn install --frozen-lockfile'}
 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -26,9 +28,11 @@ Plug 'junegunn/gv.vim'
 
 Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
 
+Plug 'romgrk/barbar.nvim'
+
 call plug#end()
 
-" Basic Settings 
+" Basic Settings
 "
 syntax on
 set notermguicolors
@@ -72,7 +76,7 @@ set backspace=indent,eol,start  " Makes backspace key more powerful.
 set showcmd                     " Show me what I'm typing
 set showmode                    " Show current mode.
 set noswapfile                  " Don't use swapfile
-set nobackup            	    " Don't create annoying backup files
+set nobackup                    " Don't create annoying backup files
 set encoding=utf-8              " Set default encoding to UTF-8
 set autowrite                   " Automatically save before :next, :make etc.
 set autoread                    " Automatically reread changed files without asking me anything
@@ -100,13 +104,15 @@ let maplocalleader=' '
 " Search and Replace
 nmap <Leader>s :%s//g<Left><Left>
 
-" Tell Vim which characters to show for expanded TABs,
-" trailing whitespace, and end-of-lines. VERY useful!
+" Invisibles
 set list
-set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-"if &listchars ==# 'eol:$'
-"    set listchars=tab:>\ ,extends:>,precedes:<,nbsp:+
-"endIf
+highlight SpecialKey ctermfg=8 guifg=DimGrey
+set lcs=tab:▒░,trail:▓,nbsp:░
+
+au OptionSet number :if v:option_new | set showbreak= |
+                   \ else | set showbreak=↪ |
+                   \ endif
+
 "let g:python_host_prog="/usr/local/bin/python3"
 
 let g:session_autosave = 'yes'
@@ -143,8 +149,8 @@ let g:multi_cursor_quit_key='<Esc>'
 "
 nmap L :bnext<CR>
 nmap H :bprevious<CR>
-nmap <leader>bn :new<CR>:q<CR>
-nmap <leader>bq :bd<CR>
+nmap N :new<CR>:q<CR>
+nmap Q :bd<CR>
 
 " Moving lines 
 nnoremap <C-j> :m .+1<CR>==
@@ -154,12 +160,14 @@ inoremap <C-k> <Esc>:m .-2<CR>==gi
 vnoremap <C-j> :m '>+1<CR>gv=gv
 vnoremap <C-k> :m '<-2<CR>gv=gv
 
+
 let NERDTreeShowHidden=1
 
 let g:prettier#exec_cmd_path = "/opt/homebrew/bin/prettier"
 let g:prettier#quickfix_enabled = 0
 
 autocmd BufWrite *.vue,*.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.svelte,*.yaml,*.html PrettierAsync
+autocmd BufWrite *.blade.php call CocAction('format')
 
 let g:php_cs_fixer_cache = "/Users/nopfault/git/teensyUrl/.php-cs-fixer.cache"
 let g:php_cs_fixer_config_file = "/Users/nopfault/git/teensUrl/.php-cs-fixer.php"
